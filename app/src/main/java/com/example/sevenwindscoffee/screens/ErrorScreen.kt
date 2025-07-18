@@ -1,4 +1,4 @@
-package com.example.rickandmortyworkmate.screens
+package com.example.sevenwindscoffee.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column

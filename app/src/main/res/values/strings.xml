@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SevenWindsCoffee</string>
+    <string name="loading">Loading</string>
+    <string name="content_description">Product</string>
 </resources>

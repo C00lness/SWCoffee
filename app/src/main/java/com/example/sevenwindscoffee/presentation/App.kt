@@ -6,6 +6,7 @@ import com.example.sevenwindscoffee.di.dataModule
 import com.example.sevenwindscoffee.di.domainModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import ru.sulgik.mapkit.MapKit
 
 class App: Application() {
     override fun onCreate() {
@@ -13,5 +14,6 @@ class App: Application() {
         startKoin {
             androidContext(this@App)
             modules(dataModule, domainModule, appModule)}
+            MapKit.setApiKey("75b0650d-4f5c-4f51-9f91-21d7ec20f684")
     }
 }

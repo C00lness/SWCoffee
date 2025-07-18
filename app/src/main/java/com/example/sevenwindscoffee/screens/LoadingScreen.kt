@@ -1,4 +1,4 @@
-package com.example.rickandmortyworkmate.screens
+package com.example.sevenwindscoffee.screens
 
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -10,7 +10,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import com.example.rickandmortyworkmate.R
+import com.example.sevenwindscoffee.R
 
 @Composable
 fun LoadingScreen() {

@@ -60,6 +60,11 @@ dependencies {
     implementation (libs.koin.android)
     implementation(libs.androidx.lifecycle.runtime.compose)
     implementation (libs.retrofit)
+    implementation (libs.androidx.navigation.compose)
+    implementation(libs.coil.compose)
+
+    implementation(libs.yandex.mapkit.kmp)
+    implementation(libs.yandex.mapkit.kmp.compose)
 
     implementation(project(":data"))
     implementation(project(":domain"))

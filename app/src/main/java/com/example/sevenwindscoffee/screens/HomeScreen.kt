@@ -1,20 +1,13 @@
 package com.example.sevenwindscoffee.screens
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.requiredHeight
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Switch
 import androidx.compose.material3.SwitchDefaults
@@ -28,30 +21,20 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.sevenwindscoffee.presentation.ViewModel
 import com.example.domain.entities.RequestUser
+import com.example.sevenwindscoffee.presentation.ViewModel
 import com.example.sevenwindscoffee.ui.theme.AntiqueWhite
 import com.example.sevenwindscoffee.ui.theme.BlackMagic
 import com.example.sevenwindscoffee.ui.theme.DarkWood
 import com.example.sevenwindscoffee.ui.theme.Sandrift
-import com.example.sevenwindscoffee.ui.theme.Silver
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun homeScreen(viewModel: ViewModel)
+fun HomeScreen(viewModel: ViewModel, onClick:() -> Unit)
 {
-    val user = RequestUser("Studio", "6667")
-    viewModel.login(user)
-    val state = viewModel.loginState.value
-
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
     val confirmPassword = remember { mutableStateOf("") }
@@ -67,9 +50,7 @@ fun homeScreen(viewModel: ViewModel)
     },
         colors = TopAppBarDefaults.topAppBarColors(
             containerColor = Color.White,
-            titleContentColor = DarkWood,
-            navigationIconContentColor = Color.LightGray,
-            actionIconContentColor = Color.LightGray))
+            titleContentColor = DarkWood))
 
     Column(modifier = Modifier.padding(25.dp)) {
         Box(modifier = Modifier.fillMaxSize(), Alignment.Center)
@@ -93,23 +74,17 @@ fun homeScreen(viewModel: ViewModel)
                 item("e-mail", email, "Example@example.ru")
                 item("Пароль", password, "*******")
                 if (checked.value) item("Подтвердите пароль", confirmPassword, "*******")
-
-                Card(modifier = Modifier
-                    .fillMaxWidth()
-                    .requiredHeight(55.dp)
-                    .clip(RoundedCornerShape(25.dp))
-                    .clickable { },
-                    colors = CardDefaults.cardColors(contentColor = AntiqueWhite, containerColor = BlackMagic))
-                {
-                    Box(modifier = Modifier.fillMaxSize(), Alignment.Center)
-                    {
-                        Text(text = if (checked.value) "Регистрация" else "Вход", fontSize = 18.sp)
-                    }
-                }
+                Button(if (checked.value) "Регистрация" else "Вход", onClick = {
+                    val user = RequestUser(email.value, password.value)
+                    if (checked.value) viewModel.regLoginLocations(user)
+                    else viewModel.loginLocations(user)
+                    onClick()
+                })
             }
         }
     }
 }
+
 @Composable
 fun item (bottomText:String, editText: MutableState<String>, hintText:String)
 {
