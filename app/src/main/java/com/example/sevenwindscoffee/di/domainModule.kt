@@ -1,5 +1,6 @@
 package com.example.sevenwindscoffee.di
 
+import com.example.domain.useCases.CurrentLocationUseCase
 import com.example.domain.useCases.LocationsUseCase
 import com.example.domain.useCases.LoginUseCase
 import com.example.domain.useCases.ProductsUseCase
@@ -21,5 +22,9 @@ val domainModule = module {
 
     factory<ProductsUseCase> {
         ProductsUseCase(repository = get())
+    }
+
+    factory<CurrentLocationUseCase> {
+        CurrentLocationUseCase(repository = get())
     }
 }

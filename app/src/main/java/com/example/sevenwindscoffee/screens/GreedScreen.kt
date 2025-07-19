@@ -104,7 +104,7 @@ fun PersonsCard(product: Product) {
                         .build(),
                     error = painterResource(id = R.drawable.baseline_coffee_24),
                     placeholder = painterResource(id = R.drawable.loading_img),
-                    contentDescription = stringResource(id = R.string.content_description),
+                    contentDescription = stringResource(id = R.string.contentDescription),
                     contentScale = ContentScale.Crop
                 )
         }

@@ -1,10 +1,13 @@
 package com.example.sevenwindscoffee.presentation
 
+import android.app.Activity
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.domain.entities.Point
 import com.example.domain.entities.RequestUser
+import com.example.domain.useCases.CurrentLocationUseCase
 import com.example.domain.useCases.LocationsUseCase
 import com.example.domain.useCases.LoginUseCase
 import com.example.domain.useCases.ProductsUseCase
@@ -19,7 +22,8 @@ import kotlinx.coroutines.launch
 class ViewModel(private val registrationUseCase: RegistrationUseCase,
                 private val loginUseCase: LoginUseCase,
                 private val locationsUseCase: LocationsUseCase,
-                private val productsUseCase: ProductsUseCase): ViewModel() {
+                private val productsUseCase: ProductsUseCase,
+                private val currentLocationUseCase: CurrentLocationUseCase): ViewModel() {
 
     private val _tokenState = mutableStateOf("")
     val tokenState: State<String?> = _tokenState
@@ -29,6 +33,9 @@ class ViewModel(private val registrationUseCase: RegistrationUseCase,
 
     private val _productsState = MutableStateFlow<CoffeeUIState>(CoffeeUIState.Loading)
     val productsState: StateFlow<CoffeeUIState> = _productsState
+
+    private val _currentLocationState = MutableStateFlow<Point?>(null)
+    val currentLocationState: StateFlow<Point?> = _currentLocationState
 
     fun getLocations(token: String) = viewModelScope.launch {
         _locationsState.value = CoffeeUIState.Loading
@@ -67,4 +74,6 @@ class ViewModel(private val registrationUseCase: RegistrationUseCase,
             getLocations(_tokenState.value)
         }
     }
+
+    fun getCurrentLocation(activity: Activity) = currentLocationUseCase.getCurrentLocations(activity)
 }

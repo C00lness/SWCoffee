@@ -1,5 +1,16 @@
 <resources>
     <string name="app_name">SevenWindsCoffee</string>
     <string name="loading">Loading</string>
-    <string name="content_description">Product</string>
+    <string name="contentDescription">Product</string>
+    <string name="locationHeader">Ближайшие кофейни</string>
+    <string name="homeEnter">Вход</string>
+    <string name="homeRegistartion">Регистрация</string>
+    <string name="homeEmailText">e-mail</string>
+    <string name="homeEmailHintText">Example@example.ru</string>
+    <string name="homePasswordText">Пароль</string>
+    <string name="homePasswordHintText">*******</string>
+    <string name="homePasswordRepeatText">Подтвердите пароль</string>
+    <string name="mapHeader">Карта</string>
+    <string name="productHeader">Меню</string>
+    <string name="productButton">Перейти к оплате</string>
 </resources>

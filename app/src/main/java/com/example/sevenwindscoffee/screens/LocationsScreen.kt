@@ -10,21 +10,13 @@ import androidx.compose.foundation.layout.requiredHeight
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.KeyboardArrowLeft
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TopAppBar
-import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -33,25 +25,14 @@ import com.example.sevenwindscoffee.presentation.CoffeeUIState
 import com.example.sevenwindscoffee.presentation.ViewModel
 import com.example.sevenwindscoffee.ui.theme.AntiqueWhite
 import com.example.sevenwindscoffee.ui.theme.DarkWood
+import com.example.sevenwindscoffee.R
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LocationsScreen(viewModel: ViewModel, onClick:() -> Unit, onBackPressed:() -> Unit, toMap:() -> Unit) {
-    TopAppBar(title = {
-        Box(modifier = Modifier.fillMaxSize(), Alignment.Center)
-        {
-            Text(text = "Ближайшие кофейни", fontWeight = FontWeight.Bold)
-        }
-    },
-        navigationIcon={ IconButton({onBackPressed() }) { Icon(Icons.Filled.KeyboardArrowLeft,
-            contentDescription = "Назад")}},
-
-        colors = TopAppBarDefaults.topAppBarColors(
-            containerColor = Color.White,
-            titleContentColor = DarkWood,
-            navigationIconContentColor = DarkWood))
+    TopBar(stringResource(id = R.string.locationHeader), backPressed = {onBackPressed()})
 
     val viewState = viewModel.locationsState.collectAsStateWithLifecycle()
+    val currentLocationState = viewModel.currentLocationState.collectAsStateWithLifecycle()
     Column(modifier = Modifier.padding(25.dp, 100.dp)) {
         when (val state = viewState.value) {
             is CoffeeUIState.Loading -> LoadingScreen()
@@ -60,7 +41,7 @@ fun LocationsScreen(viewModel: ViewModel, onClick:() -> Unit, onBackPressed:() -
                 {
                     LazyColumn(modifier = Modifier.padding(bottom = 50.dp)) {
                         items(state.locations){
-                            CardLocation(it.name.toString(), onClick = {
+                            CardLocation(it.name.toString(), currentLocationState.value.toString(), onClick = {
                                 viewModel.getProducts("/location/" + it.id + "/menu", viewModel.tokenState.value.toString())
                                 onClick()
                             })
@@ -76,7 +57,7 @@ fun LocationsScreen(viewModel: ViewModel, onClick:() -> Unit, onBackPressed:() -
 }
 
 @Composable
-fun CardLocation(name: String, onClick: () -> Unit)
+fun CardLocation(name: String, distance: String, onClick: () -> Unit)
 {
     Card(modifier = Modifier
         .fillMaxWidth()
@@ -90,7 +71,11 @@ fun CardLocation(name: String, onClick: () -> Unit)
     {
         Box(modifier = Modifier.fillMaxSize().padding(15.dp))
         {
-            Text(text = name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            Column()
+            {
+                Text(text = name, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+                Text(text = distance, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            }
         }
     }
 }

@@ -1,7 +1,10 @@
 package com.example.data.repositoryImpl
 
+import android.app.Activity
 import android.util.Log
 import com.example.data.api.RetrofitService
+import com.example.data.getCurrentLocationFun
+import com.example.domain.entities.Point
 import com.example.domain.entities.RequestUser
 import com.example.domain.repository.Repository
 import com.google.gson.GsonBuilder
@@ -60,4 +63,6 @@ class RepositoryImpl(private val retrofitService: RetrofitService): Repository {
     override fun getProducts(url: String, token: String) = flow{
         emit(retrofitService.getProducts(url, token))
     }
+
+    override fun getCurrentLocation(activity: Activity) = getCurrentLocationFun(activity)
 }

@@ -4,6 +4,7 @@ import android.app.Application
 import com.example.sevenwindscoffee.di.appModule
 import com.example.sevenwindscoffee.di.dataModule
 import com.example.sevenwindscoffee.di.domainModule
+import com.yandex.mapkit.MapKitFactory
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import ru.sulgik.mapkit.MapKit

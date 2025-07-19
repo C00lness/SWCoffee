@@ -46,5 +46,7 @@ dependencies {
     implementation (libs.okhttp)
     implementation (libs.gson)
 
+    implementation (libs.play.services.location)
+
     implementation(project(":domain"))
 }

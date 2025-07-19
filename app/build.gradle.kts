@@ -65,6 +65,7 @@ dependencies {
 
     implementation(libs.yandex.mapkit.kmp)
     implementation(libs.yandex.mapkit.kmp.compose)
+    implementation (libs.play.services.location)
 
     implementation(project(":data"))
     implementation(project(":domain"))

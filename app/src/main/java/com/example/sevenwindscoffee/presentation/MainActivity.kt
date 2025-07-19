@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.domain.entities.RequestUser
 import androidx.navigation.compose.NavHost
+import coffeeCheckPermissions
 import com.example.sevenwindscoffee.screens.HomeScreen
 import com.example.sevenwindscoffee.screens.LocationsScreen
 import com.example.sevenwindscoffee.screens.MapScreen
@@ -17,16 +17,20 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 //Не стал выделять в отдельный модуль presentation, чистота от этого, думаю, не пострадает
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModel<ViewModel>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val user = RequestUser("Studio", "6667")
+        coffeeCheckPermissions(this@MainActivity, this)
 
         enableEdgeToEdge()
         setContent {
             val navController = rememberNavController()
             NavHost(navController, startDestination = HomePage.route) {
                 composable(route = HomePage.route) {
-                    HomeScreen(viewModel, onClick = { navController.navigate(Locations.route) })
+                    HomeScreen(viewModel, onClick = {
+                        viewModel.getCurrentLocation(this@MainActivity)
+                        navController.navigate(Locations.route)
+                    })
                 }
 
                 composable(Locations.route) {
