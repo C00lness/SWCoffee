@@ -12,6 +12,7 @@ import com.example.sevenwindscoffee.screens.HomeScreen
 import com.example.sevenwindscoffee.screens.LocationsScreen
 import com.example.sevenwindscoffee.screens.MapScreen
 import com.example.sevenwindscoffee.screens.ProductsScreen
+import com.example.sevenwindscoffee.screens.BasketScreen
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 //Не стал выделять в отдельный модуль presentation, чистота от этого, думаю, не пострадает
@@ -27,8 +28,7 @@ class MainActivity : ComponentActivity() {
             val navController = rememberNavController()
             NavHost(navController, startDestination = HomePage.route) {
                 composable(route = HomePage.route) {
-                    HomeScreen(viewModel, onClick = {
-                        viewModel.getCurrentLocation(this@MainActivity)
+                    HomeScreen(viewModel, this@MainActivity, onClick = {
                         navController.navigate(Locations.route)
                     })
                 }
@@ -41,13 +41,17 @@ class MainActivity : ComponentActivity() {
                 }
                 composable(Products.route) {
                     ProductsScreen(viewModel,
-                        onClick = { navController.navigate(Products.route) },
+                        onClick = { navController.navigate(Basket.route) },
                         onBackPressed = { navController.navigateUp()})
                 }
 
                 composable(Map.route) {
                     MapScreen(viewModel,this@MainActivity,
                         onBackPressed = { navController.navigateUp()})
+                }
+
+                composable(Basket.route) {
+                    BasketScreen (viewModel, onBackPressed = { navController.navigateUp()})
                 }
             }
         }

@@ -1,5 +1,6 @@
 package com.example.sevenwindscoffee.screens
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -13,11 +14,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableFloatStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
@@ -29,7 +30,7 @@ import com.example.sevenwindscoffee.ui.theme.Sandrift
 import com.example.sevenwindscoffee.R
 
 @Composable
-fun HomeScreen(viewModel: ViewModel, onClick:() -> Unit)
+fun HomeScreen(viewModel: ViewModel, context: Context, onClick:() -> Unit)
 {
     val email = remember { mutableStateOf("") }
     val password = remember { mutableStateOf("") }
@@ -58,15 +59,25 @@ fun HomeScreen(viewModel: ViewModel, onClick:() -> Unit)
             item(stringResource(R.string.homePasswordText), password, stringResource(R.string.homePasswordHintText))
             if (checked.value) item(stringResource(R.string.homePasswordRepeatText), confirmPassword, stringResource(R.string.homePasswordHintText))
         }
+        val alpha = remember { mutableFloatStateOf(0f) }
+        Text(text = "Не совпадают пароли", color = Color.Red, modifier = Modifier.alpha(alpha.floatValue))
 
         Button(if (checked.value) stringResource(R.string.homeRegistartion) else stringResource(R.string.homeEnter), onClick = {
             val user = RequestUser(email.value, password.value)
             if (checked.value)
             {
-                viewModel.regLoginLocations(user)
+                if (password.value != confirmPassword.value) alpha.floatValue = 1f
+                else
+                {
+                    viewModel.regLoginLocations(user, context)
+                    onClick()
+                }
             }
-            else viewModel.loginLocations(user)
-            onClick()
+            else
+            {
+                viewModel.loginLocations(user, context)
+                onClick()
+            }
         })
     }
 }

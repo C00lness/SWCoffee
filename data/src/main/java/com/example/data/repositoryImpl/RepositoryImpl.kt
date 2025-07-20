@@ -1,10 +1,9 @@
 package com.example.data.repositoryImpl
 
-import android.app.Activity
-import android.util.Log
+import android.content.Context
 import com.example.data.api.RetrofitService
-import com.example.data.getCurrentLocationFun
-import com.example.domain.entities.Point
+import com.example.data.getDistanceFromLatLonInKm
+import com.example.data.getLastLocation
 import com.example.domain.entities.RequestUser
 import com.example.domain.repository.Repository
 import com.google.gson.GsonBuilder
@@ -25,7 +24,6 @@ class RepositoryImpl(private val retrofitService: RetrofitService): Repository {
         if (response.code() == 200)
         {
             val body = response.body().toString()
-            Log.d("tenpLog", body.toString())
             val gson = GsonBuilder().setPrettyPrinting().create()
             val prettyJson = gson.toJson(response.body()?.string())
             return prettyJson.substring(14).substringBefore("\\")
@@ -56,13 +54,18 @@ class RepositoryImpl(private val retrofitService: RetrofitService): Repository {
             return response.code().toString()
     }
 
-    override fun getLocations(token: String) = flow{
-        emit(retrofitService.getLocations(token))
+    override fun getLocations(token: String, context: Context) = flow{
+        val locations = retrofitService.getLocations(token)
+        val currentPosition = getLastLocation(context)
+        locations.forEach { it.s = getDistanceFromLatLonInKm(
+            currentPosition?.latitude ?: 10.0,
+            currentPosition?.longitude ?: 10.0,
+            it.point.latitude.toDouble(),
+            it.point.longitude.toDouble()
+        ) }
+        emit(locations)
     }
-
     override fun getProducts(url: String, token: String) = flow{
         emit(retrofitService.getProducts(url, token))
     }
-
-    override fun getCurrentLocation(activity: Activity) = getCurrentLocationFun(activity)
 }

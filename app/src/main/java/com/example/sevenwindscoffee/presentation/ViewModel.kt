@@ -1,14 +1,11 @@
 package com.example.sevenwindscoffee.presentation
 
-import android.app.Activity
-import android.util.Log
+import android.content.Context
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.domain.entities.Point
 import com.example.domain.entities.RequestUser
-import com.example.domain.useCases.CurrentLocationUseCase
 import com.example.domain.useCases.LocationsUseCase
 import com.example.domain.useCases.LoginUseCase
 import com.example.domain.useCases.ProductsUseCase
@@ -20,11 +17,14 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
+const val code400 = "Ошибка в запросе"
+const val code404 = "Пользователь не существует"
+const val code406 = "Такой логин уже используется"
+
 class ViewModel(private val registrationUseCase: RegistrationUseCase,
                 private val loginUseCase: LoginUseCase,
                 private val locationsUseCase: LocationsUseCase,
-                private val productsUseCase: ProductsUseCase,
-                private val currentLocationUseCase: CurrentLocationUseCase): ViewModel() {
+                private val productsUseCase: ProductsUseCase): ViewModel() {
 
     private val _tokenState = mutableStateOf("")
     val tokenState: State<String?> = _tokenState
@@ -35,12 +35,9 @@ class ViewModel(private val registrationUseCase: RegistrationUseCase,
     private val _productsState = MutableStateFlow<CoffeeUIState>(CoffeeUIState.Loading)
     val productsState: StateFlow<CoffeeUIState> = _productsState
 
-    private val _currentLocationState = MutableStateFlow<String>("")
-    val currentLocationState: StateFlow<String> = _currentLocationState
-
-    fun getLocations(token: String) = viewModelScope.launch {
+    private fun getLocations(token: String, context: Context) = viewModelScope.launch {
         _locationsState.value = CoffeeUIState.Loading
-        locationsUseCase.getLocations(token)
+        locationsUseCase.getLocations(token, context)
             .flowOn(Dispatchers.IO)
             .catch { _locationsState.emit(CoffeeUIState.Error(it.message.toString()))}
             .collect{value -> _locationsState.emit(CoffeeUIState.SuccessLocations(value))}
@@ -54,33 +51,33 @@ class ViewModel(private val registrationUseCase: RegistrationUseCase,
             .collect{value -> _productsState.emit(CoffeeUIState.SuccessProducts(value))}
     }
 
-    fun regLoginLocations(user: RequestUser) = viewModelScope.launch {
-        var res = registrationUseCase.registration(user)
-        if (res != "400")
+    fun regLoginLocations(user: RequestUser, context: Context) = viewModelScope.launch {
+        val res = registrationUseCase.registration(user)
+        if (res == "400") _locationsState.emit(CoffeeUIState.Error(code400))
+        else
         {
-            res = loginUseCase.login(user)
-            if ((res != "400") && (res != "404"))
+            if (res == "406") _locationsState.emit(CoffeeUIState.Error(code406))
+            else
             {
                 _tokenState.value = "Bearer " + res
-                getLocations(_tokenState.value)
+                getLocations(_tokenState.value, context)
             }
         }
     }
 
-    fun loginLocations(user: RequestUser) = viewModelScope.launch {
+    fun loginLocations(user: RequestUser, context: Context) = viewModelScope.launch {
         val res = loginUseCase.login(user)
         if ((res != "400") && (res != "404"))
         {
             _tokenState.value = "Bearer " + res
-            getLocations(_tokenState.value)
+            getLocations(_tokenState.value, context)
+        }
+        else
+        {
+            if (res == "400")
+                _locationsState.emit(CoffeeUIState.Error(code400))
+            if (res == "404")
+                _locationsState.emit(CoffeeUIState.Error(code404))
         }
     }
-
-    fun getCurrentLocation(activity: Activity) =
-        viewModelScope.launch {
-            currentLocationUseCase.getCurrentLocations(activity)
-                .flowOn(Dispatchers.IO)
-                .catch { Log.d("tempLog", it.message.toString()) }
-                .collect{value->_currentLocationState.emit(value)}
-        }
 }

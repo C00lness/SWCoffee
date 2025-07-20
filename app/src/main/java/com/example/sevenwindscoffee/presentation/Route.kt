@@ -19,3 +19,7 @@ object Products : Route {
 object Map : Route {
     override val route: String = "map"
 }
+
+object Basket : Route {
+    override val route: String = "basket"
+}

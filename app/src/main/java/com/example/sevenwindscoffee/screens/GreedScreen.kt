@@ -21,6 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.material3.Card
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
@@ -34,6 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.example.sevenwindscoffee.R
 import com.example.sevenwindscoffee.ui.theme.AntiqueWhite
 import com.example.sevenwindscoffee.ui.theme.DarkWood
+import com.example.sevenwindscoffee.ui.theme.Sandrift
 
 @Composable
 fun GridScreen(product: List<Product>) {
@@ -50,6 +54,7 @@ fun GridScreen(product: List<Product>) {
 
 @Composable
 fun PersonsCard(product: Product) {
+    val count = remember { mutableIntStateOf(product.count) }
     Card(
         modifier = Modifier
             .padding(5.dp)
@@ -61,38 +66,47 @@ fun PersonsCard(product: Product) {
         Column(modifier = Modifier.background(color = Color.White)) {
             Text(
                 text = product.name,
-                fontSize = 14.sp,
+                fontSize = 17.sp,
                 color = DarkWood,
                 modifier = Modifier
-                    .padding(5.dp)
+                    .padding(15.dp).align(Alignment.CenterHorizontally)
             )
-            Row(modifier = Modifier.padding(15.dp, 5.dp), horizontalArrangement = Arrangement.Absolute.SpaceBetween)
+            Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceEvenly)
             {
                 Text(
-                    text = product.price.toString(),
-                    fontSize = 19.sp,
+                    text = product.price.toString() + " руб.",
+                    fontSize = 17.sp,
                     fontWeight = FontWeight.Bold,
                     color = DarkWood
                 )
 
                 Text(
                     text = "-",
-                    fontSize = 19.sp,
+                    fontSize = 21.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AntiqueWhite,
-                    modifier = Modifier.clickable( onClick = { Log.d("tempLog", "1")})
+                    color = Sandrift,
+                    modifier = Modifier.clickable( onClick = {
+                        if (product.count > 0)
+                        {
+                            product.count--
+                            count.intValue--
+                        }
+                    })
                 )
                 Text(
-                    text = product.price.toString(),
+                    text = count.intValue.toString(),
                     fontSize = 19.sp,
                     color = DarkWood
                 )
                 Text(
                     text = "+",
-                    fontSize = 19.sp,
+                    fontSize = 21.sp,
                     fontWeight = FontWeight.Bold,
-                    color = AntiqueWhite,
-                    modifier = Modifier.clickable( onClick = {})
+                    color = Sandrift,
+                    modifier = Modifier.clickable( onClick = {
+                        count.intValue++
+                        product.count++
+                    })
                 )
             }
 

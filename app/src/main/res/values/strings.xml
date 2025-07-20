@@ -13,4 +13,10 @@
     <string name="mapHeader">Карта</string>
     <string name="productHeader">Меню</string>
     <string name="productButton">Перейти к оплате</string>
+    <string name="basketHeader">Ваш заказ</string>
+    <string name="basketButton">Оплатить</string>
+    <string name="basketText1">Время ожидания заказа</string>
+    <string name="basketText2">15 минут!</string>
+    <string name="basketText3">Спасибо, что выбрали нас!</string>
+
 </resources>

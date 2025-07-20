@@ -6,5 +6,5 @@ import org.koin.dsl.module
 
 val appModule = module {
     viewModel { ViewModel(registrationUseCase = get(), loginUseCase = get(),
-        locationsUseCase = get(), productsUseCase = get(), currentLocationUseCase = get()) }
+        locationsUseCase = get(), productsUseCase = get()) }
 }
