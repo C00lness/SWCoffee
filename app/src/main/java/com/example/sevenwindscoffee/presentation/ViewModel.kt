@@ -1,6 +1,7 @@
 package com.example.sevenwindscoffee.presentation
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
@@ -34,8 +35,8 @@ class ViewModel(private val registrationUseCase: RegistrationUseCase,
     private val _productsState = MutableStateFlow<CoffeeUIState>(CoffeeUIState.Loading)
     val productsState: StateFlow<CoffeeUIState> = _productsState
 
-    private val _currentLocationState = MutableStateFlow<Point?>(null)
-    val currentLocationState: StateFlow<Point?> = _currentLocationState
+    private val _currentLocationState = MutableStateFlow<String>("")
+    val currentLocationState: StateFlow<String> = _currentLocationState
 
     fun getLocations(token: String) = viewModelScope.launch {
         _locationsState.value = CoffeeUIState.Loading
@@ -75,5 +76,11 @@ class ViewModel(private val registrationUseCase: RegistrationUseCase,
         }
     }
 
-    fun getCurrentLocation(activity: Activity) = currentLocationUseCase.getCurrentLocations(activity)
+    fun getCurrentLocation(activity: Activity) =
+        viewModelScope.launch {
+            currentLocationUseCase.getCurrentLocations(activity)
+                .flowOn(Dispatchers.IO)
+                .catch { Log.d("tempLog", it.message.toString()) }
+                .collect{value->_currentLocationState.emit(value)}
+        }
 }

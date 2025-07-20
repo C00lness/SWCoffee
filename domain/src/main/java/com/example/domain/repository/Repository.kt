@@ -12,5 +12,5 @@ interface Repository {
     suspend fun login(user: RequestUser): String
     fun getLocations(token: String): Flow<List<Location>>
     fun getProducts(url: String, token: String): Flow<List<Product>>
-    fun getCurrentLocation(activity: Activity): Any
+    fun getCurrentLocation(activity: Activity): Flow<String>
 }
