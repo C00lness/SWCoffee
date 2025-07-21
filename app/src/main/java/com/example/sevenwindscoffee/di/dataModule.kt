@@ -3,7 +3,7 @@ package com.example.sevenwindscoffee.di
 import com.example.data.api.BASE_URL
 import com.example.data.api.getRetrofitInstance
 import com.example.data.api.getRetrofitInterface
-import com.example.data.getLastLocation
+import com.example.data.utils.getLastLocation
 import com.example.data.repositoryImpl.RepositoryImpl
 import com.example.domain.repository.Repository
 import com.example.sevenwindscoffee.presentation.MainActivity

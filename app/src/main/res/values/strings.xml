@@ -3,6 +3,7 @@
     <string name="loading">Loading</string>
     <string name="contentDescription">Product</string>
     <string name="locationHeader">Ближайшие кофейни</string>
+    <string name="locationButton">На карте</string>
     <string name="homeEnter">Вход</string>
     <string name="homeRegistartion">Регистрация</string>
     <string name="homeEmailText">e-mail</string>

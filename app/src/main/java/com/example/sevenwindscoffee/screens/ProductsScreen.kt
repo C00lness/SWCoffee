@@ -16,7 +16,7 @@ import com.example.sevenwindscoffee.presentation.ViewModel
 @Composable
 fun ProductsScreen(viewModel: ViewModel, onClick:() -> Unit, onBackPressed:() -> Unit) {
     val viewState = viewModel.productsState.collectAsStateWithLifecycle()
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = 30.dp, start = 15.dp, end = 15.dp),
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = 100.dp, start = 15.dp, end = 15.dp),
         verticalArrangement = Arrangement.SpaceBetween) {
         TopBar(stringResource(R.string.productHeader), backPressed = {onBackPressed()})
         when (val state = viewState.value) {

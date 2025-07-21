@@ -17,10 +17,6 @@ import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.launch
 
-const val code400 = "Ошибка в запросе"
-const val code404 = "Пользователь не существует"
-const val code406 = "Такой логин уже используется"
-
 class ViewModel(private val registrationUseCase: RegistrationUseCase,
                 private val loginUseCase: LoginUseCase,
                 private val locationsUseCase: LocationsUseCase,
@@ -53,31 +49,21 @@ class ViewModel(private val registrationUseCase: RegistrationUseCase,
 
     fun regLoginLocations(user: RequestUser, context: Context) = viewModelScope.launch {
         val res = registrationUseCase.registration(user)
-        if (res == "400") _locationsState.emit(CoffeeUIState.Error(code400))
-        else
+        if (res.contains("Bearer"))
         {
-            if (res == "406") _locationsState.emit(CoffeeUIState.Error(code406))
-            else
-            {
-                _tokenState.value = "Bearer " + res
-                getLocations(_tokenState.value, context)
-            }
+            getLocations(res, context)
+            _tokenState.value = res
         }
+        else _locationsState.emit(CoffeeUIState.Error(res))
     }
 
     fun loginLocations(user: RequestUser, context: Context) = viewModelScope.launch {
         val res = loginUseCase.login(user)
-        if ((res != "400") && (res != "404"))
+        if (res.contains("Bearer"))
         {
-            _tokenState.value = "Bearer " + res
-            getLocations(_tokenState.value, context)
+            getLocations(res, context)
+            _tokenState.value = res
         }
-        else
-        {
-            if (res == "400")
-                _locationsState.emit(CoffeeUIState.Error(code400))
-            if (res == "404")
-                _locationsState.emit(CoffeeUIState.Error(code404))
-        }
+        else _locationsState.emit(CoffeeUIState.Error(res))
     }
 }

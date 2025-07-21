@@ -1,5 +1,6 @@
 package com.example.sevenwindscoffee.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -16,6 +17,7 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -23,7 +25,6 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -34,14 +35,14 @@ import com.example.sevenwindscoffee.presentation.ViewModel
 import com.example.sevenwindscoffee.ui.theme.AntiqueWhite
 import com.example.sevenwindscoffee.ui.theme.DarkWood
 import com.example.sevenwindscoffee.ui.theme.Sandrift
-import com.yandex.mapkit.logo.HorizontalAlignment
 
 @Composable
 fun BasketScreen(viewModel: ViewModel, onBackPressed:() -> Unit) {
     val viewState = viewModel.productsState.collectAsStateWithLifecycle()
+
     Column(modifier = Modifier
         .fillMaxSize()
-        .padding(bottom = 30.dp, start = 15.dp, end = 15.dp),
+        .padding(bottom = 100.dp, start = 15.dp, end = 15.dp),
         verticalArrangement = Arrangement.SpaceBetween) {
         TopBar(stringResource(R.string.basketHeader), backPressed = {onBackPressed()})
         when (val state = viewState.value) {
@@ -49,10 +50,7 @@ fun BasketScreen(viewModel: ViewModel, onBackPressed:() -> Unit) {
             is CoffeeUIState.SuccessProducts -> {
                 LazyColumn() {
                     items(state.locations) {
-                        if(it.count > 0)
-                        {
-                           CardProduct(it)
-                        }
+                        if(it.count > 0) CardProduct(it)
                     }
                 }
                 if (state.locations.isNotEmpty())

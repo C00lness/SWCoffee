@@ -31,30 +31,30 @@ import com.example.sevenwindscoffee.R
 @Composable
 fun LocationsScreen(viewModel: ViewModel, onClick:() -> Unit, onBackPressed:() -> Unit, toMap:() -> Unit) {
     val viewState = viewModel.locationsState.collectAsStateWithLifecycle()
-    Column(modifier = Modifier.fillMaxSize().padding(bottom = 50.dp, start = 10.dp, end = 10.dp, top = 10.dp),
-        verticalArrangement = Arrangement.SpaceBetween)
+    Column(modifier = Modifier.fillMaxSize().padding(bottom = 100.dp, start = 10.dp, end = 10.dp, top = 10.dp),
+        verticalArrangement = Arrangement.SpaceEvenly)
     {
         TopBar(stringResource(id = R.string.locationHeader), backPressed = {onBackPressed()})
         when (val state = viewState.value) {
             is CoffeeUIState.Loading -> LoadingScreen()
             is CoffeeUIState.SuccessLocations ->
-                {
-                    LazyColumn(modifier = Modifier.padding(bottom = 50.dp)) {
-                        items(state.locations) {
-                            CardLocation(
-                                it.name.toString(),
-                                it.s.toString(),
-                                onClick = {
-                                    viewModel.getProducts(
-                                        "/location/" + it.id + "/menu",
-                                        viewModel.tokenState.value.toString()
-                                    )
-                                    onClick()
-                                })
-                        }
+            {
+                LazyColumn(modifier = Modifier.padding(bottom = 50.dp)) {
+                    items(state.locations) {
+                        CardLocation(
+                            it.name.toString(),
+                            it.s.toString(),
+                            onClick = {
+                                viewModel.getProducts(
+                                    "/location/" + it.id + "/menu",
+                                    viewModel.tokenState.value.toString()
+                                )
+                                onClick()
+                            })
                     }
-                    Button("На карте", onClick = { toMap() })
                 }
+                Button(stringResource(R.string.locationButton), onClick = { toMap() })
+            }
             is CoffeeUIState.Error -> ErrorScreen(state.message)
             else -> {}
         }
